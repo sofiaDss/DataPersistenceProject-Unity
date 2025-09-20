@@ -18,14 +18,16 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+    public Text bestScoreText;
+
+
     // Start is called before the first frame update
     void Start()
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
-        int[] pointCountArray = new [] {1,1,2,2,5,5};
+
+        int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
         for (int i = 0; i < LineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
@@ -36,6 +38,8 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        bestScoreText.text = $"Best Score: {UserExperience.Instance.bestUserName}: {UserExperience.Instance.bestUserScore}";
+        ScoreText.text = $"{UserExperience.Instance.userName}'s Score : 0";
     }
 
     private void Update()
@@ -65,12 +69,20 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"{UserExperience.Instance.userName}'s Score : {m_Points}";
+        if (m_Points >= UserExperience.Instance.bestUserScore)
+        {
+            UserExperience.Instance.bestUserName = UserExperience.Instance.userName;
+            UserExperience.Instance.bestUserScore = m_Points;
+            bestScoreText.text = $"Best Score: {UserExperience.Instance.bestUserName}: {UserExperience.Instance.bestUserScore}";
+        }
+
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        UserExperience.Instance.SaveBestUser();
     }
 }
