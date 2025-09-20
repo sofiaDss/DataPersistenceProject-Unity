@@ -20,6 +20,7 @@ public class UserExperience : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         LoadBestUser();
+        //ClearData();
     }
 
     [System.Serializable]
@@ -51,6 +52,19 @@ public class UserExperience : MonoBehaviour
 
             bestUserName = data.bestUserName;
             bestUserScore = data.bestUserScore;
+        }
+    }
+
+    void ClearData(){
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("Archivo de guardado eliminado.");
+        }
+        else
+        {
+            Debug.Log("No se encontró el archivo para eliminar.");
         }
     }
     
